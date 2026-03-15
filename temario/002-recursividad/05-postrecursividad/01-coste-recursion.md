@@ -107,7 +107,7 @@ fabricar([1,2,3])
 
 |Profundidad|Ramificación|Nodos totales|Trabajo por nodo|Coste|
 |-|-|-|-|-|
-|n|2|2^(n+1) − 1|O(1)|**O(2^n)**|
+|n|2|$2^{n+1} − 1$|O(1)|**O($2^n$)**|
 
 </div>
 
@@ -117,11 +117,13 @@ fabricar([1,2,3])
 
 |Ramificación|Profundidad|Nodos totales|Coste|
 |-|-|-|-|
-|1|n|n + 1|O(n)|
-|2|n|2^(n+1) − 1|O(2^n)|
-|k|n|(k^(n+1) − 1) / (k − 1)|O(k^n)|
+|1|n|$n + 1$|O(n)|
+|2|n|$2^{n+1} − 1$|O($2^n$)|
+|k|n|$\frac{k^{n+1} - 1}{k - 1}$|O($k^n$)|
 
 </div>
+
+> NOTA: La fórmula general de nodos totales es la serie geométrica $\sum_{i=0}^{n} k^i = \frac{k^{n+1} - 1}{k - 1}$
 
 Pasar de 1 a 2 llamadas por nodo transforma un algoritmo lineal en uno exponencial. La ramificación domina el coste.
 
