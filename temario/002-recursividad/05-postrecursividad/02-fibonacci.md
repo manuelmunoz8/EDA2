@@ -47,7 +47,7 @@ static long fib(int n) {
 
 ## ¿Cómo?
 
-### El árbol de llamadas de fib(5)
+### El árbol de llamadas de fib(10)
 
 ```
 fib(10)
