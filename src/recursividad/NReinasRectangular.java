@@ -136,50 +136,38 @@ public class NReinasRectangular {
             System.out.print("¿Cuántas reinas?: ");
             int numeroReinas = scanner.nextInt();
             
-            System.out.print("¿Cuanto deseas que sea el factor de crecimiento?(recomendamos un numero entre 1.1 y 1.5): ");
-            String stringDeFactorDeCrecimiento = scanner.next();
-            Float factorDeCrecimiento = Float.valueOf(stringDeFactorDeCrecimiento);
-            int alturaMinima, anchuraMinima;
-            int alturaMaxima, anchuraMaxima;
-
-            alturaMinima = anchuraMinima = numeroReinas;
+            System.out.print("¿Cuanto deseas que sea el factor de crecimiento, no puede ser mayor al numero de reinas?: ");
+            int factorDeCrecimiento = scanner.nextInt();
+            int alto, ancho;
 
             if (Math.random() > 0.5){
-                alturaMaxima = numeroReinas * (int)(Math.random() * ((numeroReinas * factorDeCrecimiento) - numeroReinas + 1)) + numeroReinas;
-                anchuraMaxima = numeroReinas;
+                alto = numeroReinas + factorDeCrecimiento;
+                ancho = numeroReinas;
             }else{
-                anchuraMaxima = numeroReinas * (int)(Math.random() * ((numeroReinas * factorDeCrecimiento) - numeroReinas + 1)) + numeroReinas;
-                alturaMaxima = numeroReinas;
+                ancho = numeroReinas + factorDeCrecimiento;
+                alto = numeroReinas;
             }
 
-            int altoDelTablero = numeroReinas * (int)(Math.random() * (alturaMaxima - alturaMinima) + alturaMinima) - 1;
-            int anchoDelTablero = numeroReinas * (int)(Math.random() * (anchuraMaxima - anchuraMinima) + anchuraMinima) - 1;
-
-            System.out.print("¿Qué mostrar?: 1: Una solución / 2: Todas / 3: Una con visualización / 4: Mostrar datos / 5: Salir ");
+            System.out.print("¿Qué mostrar?: 1: Una solución / 2: Todas / 3: Una con visualización / 4: Salir ");
             switch (scanner.nextInt()) {
                 case 1 -> {
                     System.out.println("Una solución (" + numeroReinas + " reinas):");
-                    int[][] tablero = new int[altoDelTablero][anchoDelTablero];
+                    int[][] tablero = new int[alto][ancho];
                     if (unaSolucion(tablero, 0, conteoDeReinas, numeroReinas)) {
                         mostrar(tablero);
                     }
                 }
                 case 2 -> {
                     System.out.println("Todas las soluciones (" + numeroReinas + " reinas):");
-                    int[][] tablero2 = new int[altoDelTablero][anchoDelTablero];
+                    int[][] tablero2 = new int[alto][ancho];
                     todasLasSoluciones(tablero2, 0, conteoDeReinas, numeroReinas);
                 }
                 case 3 -> {
                     System.out.println("Una solución con visualización (" + numeroReinas + " reinas):");
-                    int[][] tablero3 = new int[altoDelTablero][anchoDelTablero];
+                    int[][] tablero3 = new int[alto][ancho];
                     unaSolucionConVisualizacion(tablero3, 0, conteoDeReinas, numeroReinas);
                 }
-                case 4 -> {
-                    System.out.println("Los minimos son H: " + alturaMinima + " W: " + anchuraMinima);
-                    System.out.println("Los maximos son H: " + alturaMaxima + " W: " + anchuraMaxima);
-                    System.out.println("Y la dimension es ancho " + anchoDelTablero + " y su altura es " + altoDelTablero);
-                }
-                case 5 -> continuar = false;
+                case 4 -> continuar = false;
             }
         } while (continuar);
         scanner.close();
