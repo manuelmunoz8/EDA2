@@ -2,38 +2,52 @@ import java.util.Scanner;
 
 public class NReinasRectangular {
 
-    static boolean puedeColocar(int[][] tablero, int fila, int columna) {      
-        // horizontal izquierda
-        for (int c = 0; c < columna; c++) {
-            if (tablero[fila][c] == 1) {
+    static boolean puedeColocar(int[][] tablero, int fila, int columna) {
+        int cantidadColumnas = tablero[0].length;
+        int cantidadFilas = tablero.length;
+        // horizontal
+        for (int c = 0; c < cantidadColumnas; c++) {
+            if (tablero[fila][c] == 1 || tablero[fila][c] == 2) {
+                return false;
+            }
+        }
+        // vertical
+        for (int f = 0; f < cantidadFilas; f++){
+            if(tablero[f][columna] == 1 || tablero[f][columna] == 2){
                 return false;
             }
         }
         // diagonal arriba-izquierda
-        int columnaDiagonal = columna;
-        for (int f = fila; f >= 0 && columnaDiagonal >= 0; f--) {
-            if (tablero[f][columnaDiagonal] == 1) {
+        for (int f = fila, c = columna; f >= 0 && c >= 0; f--, c--) {
+            if (tablero[f][c] == 1 || tablero[f][c] == 2) {
                 return false;
             }
-            columnaDiagonal--;
         }
-        // diagonal abajo-izquierda
-        columnaDiagonal = columna;
-        for (int f = fila; f < tablero.length && columnaDiagonal >= 0; f++) {
-            if (tablero[f][columnaDiagonal] == 1) {
+        // diagonal arriba derecha
+        for (int f = fila, c = columna; f >= 0 && c < cantidadColumnas; f--, c++) {
+            if (tablero[f][c] == 1 || tablero[f][c] == 2) {
                 return false;
             }
-            columnaDiagonal--;
         }
 
+        // diagonal abajo-izquierda
+        for (int f = fila, c = columna; f < cantidadFilas && c >= 0; f++, c--) {
+            if (tablero[f][c] == 1 || tablero[f][c] == 2) {
+                return false;
+            }
+        }
+
+        // diagonal abajo derecha
+        for (int f = fila, c = columna; f < cantidadFilas && c < cantidadColumnas; f++, c++) {
+            if (tablero[f][c] == 1 || tablero[f][c] == 2) {
+                return false;
+            }
+        }
         return true;
     }
 
     static boolean unaSolucion(int[][] tablero, int columna, int[] reinasEnTablero, int maximoDeReinas) {
         if (columna == tablero.length) {
-            return true;
-        }
-        if (reinasEnTablero[0] == maximoDeReinas){
             return true;
         }
 
@@ -43,7 +57,7 @@ public class NReinasRectangular {
             }
 
             if (puedeColocar(tablero, fila, columna)){
-                tablero[fila][columna] = 1;     // HACER
+                tablero[fila][columna] = reinasEnTablero[0] == 0 ? 2 : 1;     // HACER
                 reinasEnTablero[0]+=1;
                 if (unaSolucion(tablero, columna + 1, reinasEnTablero, maximoDeReinas)) {
                     return true;                // propagar éxito
@@ -55,23 +69,24 @@ public class NReinasRectangular {
         return false;
     }
 
-    static void  todasLasSoluciones(int[][] tablero, int columna, int[] reinasEnTablero, int maximoDeReinas) {
-        if (columna == tablero.length) {
-            mostrar(tablero);
-            return;
-        }
+    static void  todasLasSoluciones(int[][] tablero, int[] reinasEnTablero, int maximoDeReinas) {
         if (reinasEnTablero[0] == maximoDeReinas) {
             mostrar(tablero);
             return;
         }
-        for (int fila = 0; fila < tablero.length; fila = fila + 1) {
-
-            if (puedeColocar(tablero, fila, columna)) {
-                tablero[fila][columna] = 1; // HACER
-                reinasEnTablero[0]+=1;
-                todasLasSoluciones(tablero, columna + 1, reinasEnTablero, maximoDeReinas);
-                tablero[fila][columna] = 0; // DESHACER
-                reinasEnTablero[0]-=1;
+        for (int fila = 0; fila < tablero.length; fila++) {
+            for(int columna = 0; columna < tablero[0].length; columna++){
+                if (columna == tablero[0].length) {
+                    mostrar(tablero);
+                    return;
+                }
+                if (puedeColocar(tablero, fila, columna)) {
+                    tablero[fila][columna] = reinasEnTablero[0] == 0 ? 2 : 1;
+                    reinasEnTablero[0]+=1;
+                    todasLasSoluciones(tablero, reinasEnTablero, maximoDeReinas);
+                    tablero[fila][columna] = 0; // DESHACER
+                    reinasEnTablero[0]-=1;
+                }
             }
         }
     }
@@ -89,7 +104,7 @@ public class NReinasRectangular {
         for (int fila = 0; fila < tablero.length; fila = fila + 1) {
             if (puedeColocar(tablero, fila, columna)) {
                 System.out.println(EXITO + " Reina " + (columna + 1) + " en fila " + (fila + 1) + ": puede");
-                tablero[fila][columna] = 1;
+                tablero[fila][columna] = reinasEnTablero[0] == 0 ? 2 : 1;
                 reinasEnTablero[0]+=1;
                 mostrar(tablero);
                 pausar();
@@ -120,7 +135,7 @@ public class NReinasRectangular {
         System.out.println("-".repeat(tablero.length * 10));
         for (int[] fila : tablero) {
             for (int celda : fila) {
-                System.out.print(celda == 1 ? " Q " : " . ");
+                System.out.print(celda == 1 ? " Q " : celda == 2 ? " R " : " . ");
             }
             System.out.println();
         }
@@ -160,7 +175,7 @@ public class NReinasRectangular {
                 case 2 -> {
                     System.out.println("Todas las soluciones (" + numeroReinas + " reinas):");
                     int[][] tablero2 = new int[alto][ancho];
-                    todasLasSoluciones(tablero2, 0, conteoDeReinas, numeroReinas);
+                    todasLasSoluciones(tablero2, conteoDeReinas, numeroReinas);
                 }
                 case 3 -> {
                     System.out.println("Una solución con visualización (" + numeroReinas + " reinas):");
